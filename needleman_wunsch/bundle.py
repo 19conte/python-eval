@@ -1,25 +1,23 @@
 import os
 import sys
-import pandas as pd
-import datetime
-import csv
 import argparse
-import Ruler
+from ruler import Ruler
 
 def data_initialization(datafile):
     """ From a .txt file containing strings to compare, it creates a list of strings,
     without empty strings """
-    f = open(datafile, "r")
-    lines = f.readlines()
-    dataset = [y for y in [x.strip() for x in lines] if y != '']
-    if len(dataset) % 2 != 0:
-        dataset.pop() 
+
+    with open(datafile) as f:
+        lines = f.readlines()
+        dataset = [y for y in [x.strip() for x in lines] if y != '']
+        if len(dataset) % 2 != 0:
+            dataset.pop() 
     return dataset
 
 def strings_comparison(str1, str2):
-    ruler = Ruler(str1, str2):
+    ruler = Ruler(str1, str2)
     ruler.compute()
-    print("======== distance = " + ruler.distance)
+    print("======== distance = " + str(ruler.distance))
     top, bottom = ruler.report()
     print(top)
     print(bottom)
