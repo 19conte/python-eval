@@ -23,6 +23,7 @@ class TreeBuilder():
         self.text = text
         self.Leaf_queue = []
         self.Internal_queue = []
+        self.Root_Node = None
 
     def weight_dict(self):  
         """ Creates a dictionnary with the weight of each character """
@@ -36,9 +37,10 @@ class TreeBuilder():
 
     @staticmethod
     def find_2mins(L):
-        min1 = min(L)
-        L.remove(min1)
-        min2 = min(L)  
+        L_copy = L[:]
+        min1 = min(L_copy)
+        L_copy.remove(min1)
+        min2 = min(L_copy)  
         return min1, min2 
 
     def create_LeafQueue(self):
@@ -63,4 +65,30 @@ class TreeBuilder():
             new_node.child1 = node1
             new_node.child2 = node2
             self.Internal_queue.insert(0, new_node)
+            if len(self.Internal_queue) == 1 and len(self.Leaf_queue) == 0:
+                self.Root_Node = self.Internal_queue[0]
+                return(self.Root_Node)
+                
+
+builder = TreeBuilder("AAAAAAAAAAAAAAABBBBBBBCCCCCCDDDDDDEEEEE")
+binary_tree = builder.tree()
+
+class Codec():
+
+    def __init__(self, binary_tree : Node):
+        self.binary_tree = binary_tree
+    
+    def encode(self, text : str):
+        for letter in text:
+            added_part = ""
+            examined_letter = ""
+            root = self.binary_tree
+            while examined_letter != letter:
+
+        return code
             
+
+    def decode(self, code : str):
+        for number in code:
+        return text
+
