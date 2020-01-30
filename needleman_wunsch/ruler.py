@@ -1,6 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import numpy as np
 
 class Ruler():
+    """ Crée une instance de calcul de distance """
 
     def __init__(self, brin1 : str, brin2 : str, match_award = 0, mismatch_penalty = 1,
      gap_penalty = 1):
@@ -9,8 +13,10 @@ class Ruler():
 
         self.brin1 = brin1
         self.brin2 = brin2
-        self.n = len(self.brin1) #on stocke la longueur des 2 chaînes à comparer
+        #on stocke la longueur des 2 chaînes à comparer
+        self.n = len(self.brin1) 
         self.m = len(self.brin2)
+        # On initialise les alignements optimaux des deux chaînes, que l'on va construire après.
         self.AlignmentA = ""
         self.AlignmentB = ""
         self.mismatch_penalty = mismatch_penalty
@@ -94,6 +100,7 @@ class Ruler():
         self.AlignmentA = self.AlignmentA[::-1]
         self.AlignmentB = self.AlignmentB[::-1]    
 
+        # Calcul de la distance par parcours simultané des 2 chaînes
         for a, b in zip(self.AlignmentA, self.AlignmentB):
             self.distance += self._match_score(a, b)
             

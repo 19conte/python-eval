@@ -1,8 +1,13 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+""" Realizes Huffman coding """
+
 class Node():
     """ This class defines nodes of the tree, each node contains a character or a string 
-    of characters and its weight. Introduces a way to 'compare' nodes."""
+    of characters and its weight. Also introduces a way to 'compare' nodes."""
 
-    def __init__(self, char, wgt):
+    def __init__(self, char : str, wgt : int):
         self.char = char
         self.wgt = wgt
         self.child1 = None
@@ -20,17 +25,15 @@ class Node():
         
 
 class TreeBuilder():
-    """Builds a tree. To build it, we use 2 queues: one Leaf_queue, which contains 
-    1-character-nodes, and one Internal_queue for the other nodes.""" 
+    """Builds a tree. To build it, we use a Node_queue""" 
 
-    def __init__(self, text):
+    def __init__(self, text : str):
         self.text = text
-        self.Leaf_queue = []
-        self.Internal_queue = []
+        self.Node_queue = []
         self.Root_Node = None
 
     def weight_dict(self):  
-        """ Creates a dictionnary with the weight of each character """
+        """ Creates a dictionary with the weight of each character """
 
         weight = {}
         for character in self.text:
@@ -40,8 +43,8 @@ class TreeBuilder():
         return weight
 
     @staticmethod
-    def find_2mins(L):
-    """ Finds the 2 smallest nodes of a list of nodes"""
+    def find_2mins(L : list):
+        """ Finds the 2 smallest nodes of a list of nodes"""
 
         L_copy = L[:]
         min1 = min(L_copy)
@@ -49,37 +52,36 @@ class TreeBuilder():
         min2 = min(L_copy)  
         return min1, min2 
 
-    def create_LeafQueue(self):
-        """ Initalize Nodes: at the beginning all Nodes are Leaf Nodes """
+    def create_Node_Queue(self):
+        """ Initalizes Node_Queue thanks to the dictionary created by TreeBuilder.weight_dict """
 
         weight = self.weight_dict()
+        # We stock Nodes by weight-ascending order
         ordered_queue = [(k, v) for k, v in sorted(weight.items(), key=lambda item: item[1])]
         for x in ordered_queue:
             x = Node(x[0], x[1])
-            self.Leaf_queue.append(x)
+            self.Node_queue.append(x)
 
     def tree(self):
-        self.create_LeafQueue()
-        while len(self.Leaf_queue) + len(self.Internal_queue) > 1:
-            node1, node2 = TreeBuilder.find_2mins(self.Leaf_queue[0:2] + self.Internal_queue[0:2])
-            for node in [node1, node2]:    
-                if node in self.Leaf_queue[0:2]:
-                    self.Leaf_queue.remove(node)
-                else:
-                    self.Internal_queue.remove(node)
+        """ We build the tree by creating a new node from the two-least-weighted nodes of the
+        Node_queue. We remove these two 'smallest' nodes and repeat the process """
+
+        self.create_Node_Queue()
+        while len(self.Node_queue) > 1:
+            node1, node2 = TreeBuilder.find_2mins(self.Node_queue)
+            for node in [node1, node2]:  
+                self.Node_queue.remove(node)  
             new_node = Node(node1.char + node2.char, node1.wgt + node2.wgt)
             new_node.child1 = node1
             new_node.child2 = node2
-            self.Internal_queue.insert(0, new_node)
-            if len(self.Internal_queue) == 1 and len(self.Leaf_queue) == 0:
-                self.Root_Node = self.Internal_queue[0]
+            self.Node_queue.insert(0, new_node)
+            if len(self.Node_queue) == 1:
+                self.Root_Node = self.Node_queue[0]
                 return(self.Root_Node)
-                
-test_text = "a dead dad ceded a bad babe a beaded abaca bed"
-builder = TreeBuilder(test_text)
-binary_tree = builder.tree()
 
 class Codec():
+    """ Contains encode and decode methods, which depend on the binary_tree provided 
+    by the user """
 
     def __init__(self, binary_tree : Node):
         self.binary_tree = binary_tree

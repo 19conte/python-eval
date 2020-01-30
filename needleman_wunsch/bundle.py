@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import os
 import sys
 import argparse
@@ -5,7 +8,7 @@ from ruler import Ruler
 
 def data_initialization(datafile):
     """ From a .txt file containing strings to compare, it creates a list of strings,
-    without empty strings """
+    without empty strings. This list has an even length"""
 
     with open(datafile) as f:
         lines = f.readlines()
@@ -14,7 +17,9 @@ def data_initialization(datafile):
             dataset.pop() 
     return dataset
 
-def strings_comparison(str1, str2):
+def strings_comparison(str1 : str, str2 : str):
+    """ Displays the distance and the alignments between 2 strings """
+    
     ruler = Ruler(str1, str2)
     ruler.compute()
     print("======== distance = " + str(ruler.distance))
