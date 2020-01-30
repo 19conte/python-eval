@@ -62,7 +62,8 @@ class Ruler():
             score_left = F[i-1][j]
 
             # Si on vient la case en diagonal au-dessus:
-            if score_current == score_diagonal + self._match_score(self.brin1[j-1], self.brin2[i-1]):
+            if score_current == score_diagonal + self._match_score(self.brin1[j-1],
+             self.brin2[i-1]):
                 self.AlignmentA += self.brin1[j-1]
                 self.AlignmentB += self.brin2[i-1]
                 i -= 1

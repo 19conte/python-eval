@@ -1,5 +1,7 @@
 class Node():
-    
+    """ This class defines nodes of the tree, each node contains a character or a string 
+    of characters and its weight. Introduces a way to 'compare' nodes."""
+
     def __init__(self, char, wgt):
         self.char = char
         self.wgt = wgt
@@ -18,6 +20,8 @@ class Node():
         
 
 class TreeBuilder():
+    """Builds a tree. To build it, we use 2 queues: one Leaf_queue, which contains 
+    1-character-nodes, and one Internal_queue for the other nodes.""" 
 
     def __init__(self, text):
         self.text = text
@@ -37,6 +41,8 @@ class TreeBuilder():
 
     @staticmethod
     def find_2mins(L):
+    """ Finds the 2 smallest nodes of a list of nodes"""
+
         L_copy = L[:]
         min1 = min(L_copy)
         L_copy.remove(min1)
@@ -61,7 +67,7 @@ class TreeBuilder():
                     self.Leaf_queue.remove(node)
                 else:
                     self.Internal_queue.remove(node)
-            new_node = Node(None, node1.wgt + node2.wgt)
+            new_node = Node(node1.char + node2.char, node1.wgt + node2.wgt)
             new_node.child1 = node1
             new_node.child2 = node2
             self.Internal_queue.insert(0, new_node)
@@ -69,8 +75,8 @@ class TreeBuilder():
                 self.Root_Node = self.Internal_queue[0]
                 return(self.Root_Node)
                 
-
-builder = TreeBuilder("AAAAAAAAAAAAAAABBBBBBBCCCCCCDDDDDDEEEEE")
+test_text = "a dead dad ceded a bad babe a beaded abaca bed"
+builder = TreeBuilder(test_text)
 binary_tree = builder.tree()
 
 class Codec():
@@ -79,16 +85,34 @@ class Codec():
         self.binary_tree = binary_tree
     
     def encode(self, text : str):
+        code = ""
         for letter in text:
-            added_part = ""
-            examined_letter = ""
-            root = self.binary_tree
-            while examined_letter != letter:
-
+            added_code = ""
+            examined_node = self.binary_tree
+            while examined_node.char != letter:
+                if letter in examined_node.child1.char:
+                    added_code += "0"
+                    examined_node = examined_node.child1
+                else:
+                    added_code += "1"
+                    examined_node = examined_node.child2
+            code += added_code
         return code
             
 
     def decode(self, code : str):
-        for number in code:
+        text = ""
+        i = 0
+        while i <= len(code) - 1: 
+            examined_node = self.binary_tree
+            j = 0
+            while len(examined_node.char) != 1:
+                if code[i + j] == "0":
+                    examined_node = examined_node.child1
+                if code[i + j] == "1":
+                    examined_node = examined_node.child2
+                j += 1
+            text += examined_node.char
+            i += j
         return text
 
